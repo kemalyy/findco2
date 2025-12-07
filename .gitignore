@@ -1,0 +1,10 @@
+# PocketBase Deployment
+
+Ignore data and secrets
+pb_data/
+pb_migrations/
+.env
+*.log
+
+# OS files
+.DS_Store
