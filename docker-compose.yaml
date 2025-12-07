@@ -5,47 +5,47 @@ services:
     image: ghcr.io/muchobien/pocketbase:latest
     container_name: pocketbase
     restart: unless-stopped
-    
-    # Resource limits (8GB RAM sunucu için)
+
+    # Resource limits (4 CPU sunucu için)
     deploy:
       resources:
         limits:
-          cpus: "6"
+          cpus: "3.5"
           memory: 6G
         reservations:
-          cpus: "2"
-          memory: 2G
-    
+          cpus: "1"
+          memory: 1G
+
     # Portlar - Cloudflare arkasında sadece internal erişim
     ports:
       - "127.0.0.1:8090:8090"
-    
+
     # Environment - .env dosyasından
     environment:
       - PB_ENCRYPTION_KEY=${PB_ENCRYPTION_KEY}
-    
+
     # Volumes - Kalıcı veri
     volumes:
       - ./pb_data:/pb_data
       - ./pb_hooks:/pb_hooks
       - ./pb_migrations:/pb_migrations
-    
+
     # Healthcheck
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8090/api/health"]
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8090/api/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-    
+
     # ulimit override (10k bağlantı için)
     ulimits:
       nofile:
         soft: 65536
         hard: 65536
-    
+
     # Komut - hooks ile başlat
-    command: ["serve", "--http=0.0.0.0:8090", "--hooksDir=/pb_hooks"]
+    command: [ "serve", "--http=0.0.0.0:8090", "--hooksDir=/pb_hooks" ]
 
 networks:
   default:
